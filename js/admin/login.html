@@ -1,0 +1,63 @@
+
+
+
+<?php
+require('connection.inc.php');
+require('functions.inc.php');
+$msg='';
+if(isset($_POST['submit'])){
+	$username=get_safe_value($con,$_POST['username']);
+	$password=get_safe_value($con,$_POST['password']);
+	$sql="select * from admin_user where username='$username' and password='$password'";
+	$res=mysqli_query($con,$sql);
+	$count=mysqli_num_rows($res);
+	if($count>0){
+		$_SESSION['ADMIN_LOGIN']='yes';
+		$_SESSION['ADMIN_USERNAME']=$username;
+		header('location:index.php');
+		die();
+	}else{
+		$msg="Please enter correct login details";	
+	}
+	
+}
+?>
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <link href="css/login.css" rel="stylesheet">
+   </html> 
+<body>
+    <div class="login-container">
+        <form class="login-form">
+        <form method="POst">
+            <h2>Admin login</h2>
+            <div class="input-group">
+                <input type="text" name="username" placeholder="Email Address" required>
+            </div>
+            <div class="input-group">
+                <input type="password" name="password" placeholder="Password" required>
+            </div>
+            <div class="options">
+                <label></label>
+              
+            </div>
+            <button type="submit">Login</button>
+            
+        </form>
+    </div>
+</body>
+</html>
