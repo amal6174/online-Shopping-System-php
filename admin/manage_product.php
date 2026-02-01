@@ -1,110 +1,110 @@
-<?php
+ <?php
 require('top.inc.php');
-$categories_id='';
-$name='';
-$mrp='';
-$price='';
-$qty='';
+// $categories_id='';
+// $name='';
+// $mrp='';
+// $price='';
+// $qty='';
 
-$image='';
-$short_desc	='';
-$description	='';
-$meta_title	='';
-$meta_description	='';
-$meta_keyword='';
+// $image='';
+// $short_desc	='';
+// $description	='';
+// $meta_title	='';
+// $meta_description	='';
+// $meta_keyword='';
 
 $msg='';
 $image_required='required';
-if(isset($_GET['id']) && $_GET['id']!=''){
-	$image_required='';
-	$id=get_safe_value($con,$_GET['id']);
-	$res=mysqli_query($con,"select * from product where id='$id'");
-	$check=mysqli_num_rows($res);
-	if($check>0){
-		$row=mysqli_fetch_assoc($res);
-		$categories_id=$row['categories_id'];
-		$name=$row['name'];
-		$mrp=$row['mrp'];
-		$price=$row['price'];
-		$qty=$row['qty'];
-		$short_desc=$row['short_desc'];
-		$description=$row['description'];
-		$meta_title=$row['meta_title'];
-		$meta_desc=$row['meta_desc'];
-		$meta_keyword=$row['meta_keyword'];
-	}else{
-		header('location:product.php');
-		die();
-	}
-}
+
 
 if(isset($_POST['submit'])){
-	$categories_id=get_safe_value($con,$_POST['categories_id']);
-	$name=get_safe_value($con,$_POST['name']);
-		
-	$mrp=get_safe_value($con,$_POST['mrp']);
-	$price=get_safe_value($con,$_POST['price']);
-	$qty=get_safe_value($con,$_POST['qty']);
-	$short_desc=get_safe_value($con,$_POST['short_desc']);
-	$description=get_safe_value($con,$_POST['description']);
-	$meta_title=get_safe_value($con,$_POST['meta_title']);
-	$meta_desc=get_safe_value($con,$_POST['meta_desc']);
-	$meta_keyword=get_safe_value($con,$_POST['meta_keyword']);
-	
-	$res=mysqli_query($con,"select * from products where p_name='$name'");
-	$check=mysqli_num_rows($res);
-	if($check>0){
-		if(isset($_GET['id']) && $_GET['id']!=''){
-			$getData=mysqli_fetch_assoc($res);
-			if($id==$getData['id']){
-			
-			}else{
-				$msg="Product already exist";
-			}
-		}else{
-			$msg="Product already exist";
-		}
-	}
+	$categories_id = get_safe_value($con,$_POST['categories_id']);
+	$brand_id = get_safe_value($con,$_POST['brand_id']);
+    $product_name = get_safe_value($con,$_POST['name']);
 	
 	
-	if($_GET['p_id']==0){
-		if($_FILES['image']['type']!='image/png' && $_FILES['image']['type']!='image/jpg' && $_FILES['image']['type']!='image/jpeg'){
-			$msg="Please select only png,jpg and jpeg image formate";
-		}
-	}else{
-		if($_FILES['image']['type']!=''){
-				if($_FILES['image']['type']!='image/png' && $_FILES['image']['type']!='image/jpg' && $_FILES['image']['type']!='image/jpeg'){
-				$msg="Please select only png,jpg and jpeg image formate";
-			}
-		}
-	}
-	
-	if($msg==''){
-		if(isset($_GET['id']) && $_GET['id']!=''){
-			if($_FILES['image']['name']!=''){
-				$image=rand(111111111,999999999).'_'.$_FILES['image']['name'];
-				move_uploaded_file($_FILES['image']['tmp_name'],PRODUCT_IMAGE_SERVER_PATH.$image);
-				$update_sql="update product set categories_id='$categories_id',name='$name',mrp='$mrp',price='$price',qty='$qty',short_desc='$short_desc',description='$description',meta_title='$meta_title',meta_desc='$meta_desc',meta_keyword='$meta_keyword',image='$image' where id='$id'";
-			}else{
-				$update_sql="update product set categories_id='$categories_id',name='$name',mrp='$mrp',price='$price',qty='$qty',short_desc='$short_desc',description='$description',meta_title='$meta_title',meta_desc='$meta_desc',meta_keyword='$meta_keyword' where id='$id'";
-			}
-			mysqli_query($con,$update_sql);
-		}else{
-			$image=rand(111111111,999999999).'_'.$_FILES['image']['name'];
-			move_uploaded_file($_FILES['image']['tmp_name'],PRODUCT_IMAGE_SERVER_PATH.$image);
-			mysqli_query($con,"insert into products(categories_id,p_name,mrp,price,qty,short_desc,description,meta_title,meta_desc,meta_keyword,status,p_image) values('$categories_id','$name','$mrp','$price','$qty','$short_desc','$description','$meta_title','$meta_desc','$meta_keyword',1,'$image')");
-		}
-		header('location:product.php');
-		die();
-	}
+
+	$mrp = get_safe_value($con,$_POST['mrp']);
+	$price = get_safe_value($con,$_POST['price']);
+	$qty = get_safe_value($con,$_POST['qty']);
+
+
+	$short_desc = get_safe_value($con,$_POST['short_desc']);
+	$description = get_safe_value($con,$_POST['description']);
+	$meta_title = get_safe_value($con,$_POST['meta_title']);
+	$meta_desc = get_safe_value($con,$_POST['meta_desc']);	
+	$meta_keyword = get_safe_value($con,$_POST['meta_keyword']);
+
+
+
+$cat_res = mysqli_query($con,"SELECT category_name FROM categories WHERE categories_id='$categories_id'");
+$cat_row = mysqli_fetch_assoc($cat_res);
+$category_name = $cat_row['category_name'];
+
+   $brand_check = mysqli_query($con, "SELECT id, brand_name FROM brands WHERE id='$brand_id'");
+    if (mysqli_num_rows($brand_check) == 0) {
+    die("Invalid brand selected");
 }
-?>
+   $brand_row = mysqli_fetch_assoc($brand_check);
+   $brand_name = $brand_row['brand_name'];
+
+
+
+  mysqli_query($con,"INSERT INTO products(categories_id,brand_id,p_name,category_name,brand_name,mrp,p_price,qty,short_desc,description,meta_title,meta_desc,meta_keyword,status)VALUES
+  ('$categories_id','$brand_id','$product_name','$category_name','$brand_name','$mrp','$price','$qty','$short_desc','$description','$meta_title','$meta_desc','$meta_keyword',1)");
 
 
 
 
 
 
+	// $res = mysqli_query($con,"SELECT * FROM products WHERE p_name='$product_name'");
+	// $check = mysqli_num_rows($res);
+
+	// if($check > 0){
+	// 	if(isset($_GET['id']) && $_GET['id']!= '' ){
+	// 		$getData = mysqli_fetch_assoc($res);
+	// 		if($id==$getData['id']){
+
+
+	// 		}else{
+	// 			$msg="Product already exist";
+	// 		}
+	// 	}else{
+	// 		$msg="Product already exist";
+	// 	}
+
+	// }
+
+
+	// if($msg == ''){
+	// 	if(isset($_GET['id']) && $_GET['id']!=''){
+    //     //   mysqli_query($con,"UPDATE products SET categories_id='$categories_id',p_name='$product_name',mrp='$mrp',
+	// 	//               price='$price',qty='$qty',short_desc='$short_desc',");
+
+	// 	}else{
+	// 		mysqli_query($con,"INSERT INTO products(categories_id,p_name,mrp,p_price,qty,short_desc,description,meta_title,meta_desc,meta_keyword,status)
+	// 		VALUES('$categories_id','$product_name','$mrp','$price','$qty','$short_desc','$description','$meta_title','$meta_desc','$meta_keyword',1)");
+
+	// 	}
+
+
+
+
+
+
+
+		header("location:product.php");
+	// }
+
+
+
+
+
+}
+
+
+ 
 
 
 
@@ -155,7 +155,7 @@ if(isset($_POST['submit'])){
 
 								<div class="form-group">
 									<label for="categories" class=" form-control-label">Brand Name</label>
-									<select class="form-control" name="categories_id">
+									<select class="form-control" name="brand_id" required>
 										 <option value="">Select Barand</option>
 										<?php
 									  while ($row = mysqli_fetch_assoc($rel)) {

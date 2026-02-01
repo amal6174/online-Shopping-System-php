@@ -2,9 +2,44 @@
 include "connection.inc.php";
 session_start();
 
+
+if(isset($_POST['login'])){
+  $email = $_POST['email'];
+  $pass = $_POST['password'];
+
+  $sql = $con->prepare("SELECT * FROM users WHERE email=? AND status=1");
+  $sql->bind_param("s",$email);
+  $sql->execute();
+  $result = $sql->get_result();
+
+  if($result->num_rows == 1){
+    $user = $result->fetch_assoc();
+
+    if(password_verify($pass, $user['password'])){
+      $_SESSION['user_id'] = $user['u_id'];
+      $_SESSION['user_name'] = $user['u_name'];
+
+      header("location: index.php");
+
+    }else{
+     echo "<script> alert('password Wrong')</script>";
+    }
+
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+
 ?>
-<!-- Show message if login fails -->
-<p style="color:red;"><?php ?></p>
 
 
 
@@ -26,16 +61,19 @@ session_start();
     <div class="form login">
       <div class="form-content">
         <header>Login</header>
-        <form action="send_otp.php" method="POST">
+        <form action="" method="POST">  <!-- form -->
           <div class="field input-field">
             <input type="email" placeholder="Email" name="email" class="input">
+          </div>
+           <div class="field input-field">
+            <input type="password" placeholder="password" name="password" class="input">
           </div>
           
           <div class="form-link">
             <a href="#" class="forgot-pass">Forgot password?</a>
           </div>
           <div class="field button-field">
-            <button type="submit" name="send_otp">Login</button>
+            <button type="submit" name="login">Login</button>
           </div>
         </form>
         <div class="form-link">

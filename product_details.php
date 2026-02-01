@@ -74,7 +74,7 @@ if (isset($_GET['id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $product['p_name']; ?></title>
-    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
@@ -134,15 +134,21 @@ if (isset($_GET['id'])) {
             </div>
 
             <!-- Add to Cart & Buy Now Buttons -->
-            <form method="post">
-                <button type="submit" name="add_to_cart" class="btn btn-warning btn-lg">
-                    <i class="fas fa-shopping-cart"></i> Add to Cart
+               <div class="product-buttons">
+                <button    class="btn btn-warning btn-lg addToCartBtn"
+                     data-id="<?php echo $product['p_id']; ?>"
+                     data-name="<?php echo $product['p_name']; ?>"
+                     data-image="<?php echo $product['p_image']; ?>"
+                     data-price="<?php echo $product['p_price']; ?>">
+                    <i class="fa-solid fa-cart-shopping"></i> Add to Cart
                 </button>
-                <a href="checkout.php?id=<?php echo $product['p_id']; ?>" class="btn btn-danger btn-lg ms-2">
+
+
+                <a href="direct_checkout.php?p_id=<?php echo $product['p_id']; ?>" class="btn btn-danger btn-lg ms-2">
                     <i class="fas fa-bolt"></i> Buy Now
                 </a>
-            </form>
-
+            
+               </div>
             <!-- Available Offers -->
             <div class="mt-4">
                 <h6 class="fw-bold">Available Offers</h6>
@@ -167,6 +173,9 @@ if (isset($_GET['id'])) {
 
 <!-- Bootstrap 5 JS (optional) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script src="js/add_to_cart.js"></script>
 
 </body>
 </html>

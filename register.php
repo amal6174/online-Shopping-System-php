@@ -1,51 +1,12 @@
 <?php
+include('connection.inc.php'); 
 
-include('connection.inc.php'); //
-include('smtp/PHPMailerAutoload.php');
-session_start();
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signup'])) {
-    $name = mysqli_real_escape_string($con, $_POST['name']);
-    $email = mysqli_real_escape_string($con, $_POST['email']);
-    $phone = mysqli_real_escape_string($con, $_POST['phone']);
-    $password = mysqli_real_escape_string($con, $_POST['password']);
 
-    // Hash password using MD5
-    $hashed_password = md5($password);  // ✅ Fixed MD5 hashing
-
-    $otp = rand(1000, 9999);
-
-    // Store data in session for verification
-    $_SESSION['otp'] = $otp;
-    $_SESSION['email'] = $email;
-    $_SESSION['name'] = $name;
-    $_SESSION['phone'] = $phone;
-    $_SESSION['hashed_password'] = $hashed_password;
-
-    // Send OTP Email
-    $mail = new PHPMailer(true);
-    try {
-        $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com';
-        $mail->SMTPAuth = true;
-        $mail->Username = 'greenery.freshh@gmail.com'; 
-        $mail->Password = 'kcmeicsiauxfvftd'; // Use your app password
-        $mail->SMTPSecure = 'tls';
-        $mail->Port = 587;
-
-        $mail->setFrom('greenery.freshh@gmail.com', 'Fashion Mitra');
-        $mail->addAddress($email);
-        $mail->Subject = 'Your OTP Code';
-        $mail->Body = 'Your OTP for account verification is: ' . $otp;
-
-        $mail->send();
-    } catch (Exception $e) {
-        die('Email could not be sent. Mailer Error: ' . $mail->ErrorInfo);
-    }
-}
 ?>
-<?php if (isset($_SESSION['otp'])): ?>
-<!-- OTP Verification Page -->
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -54,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signup'])) {
     <title>Verify OTP</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        /* Basic Page Styling */
+
         body {
             display: flex;
             justify-content: center;
@@ -65,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signup'])) {
             margin: 0;
         }
 
-        /* OTP Container */
         .container {
             width: 100%;
             max-width: 380px;
@@ -76,7 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signup'])) {
             text-align: center;
         }
 
-        /* Title */
         h2 {
             font-size: 24px;
             font-weight: bold;
@@ -137,12 +96,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signup'])) {
 <body>
     <div class="container">
         <h2>Enter OTP</h2>
-        <form method="POST" action="verify_otp.php">
+        <form method="POST" action="">
             <div class="input-group">
                 <label for="otp">OTP Code</label>
                 <input type="text" name="otp" id="otp" required placeholder="Enter OTP">
             </div>
-            <button type="submit" class="btn" name="verify">Verify OTP</button>
+            <button type="submit" class="btn" name="register">Verify OTP</button>
         </form>
     </div>
 </body>

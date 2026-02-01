@@ -44,7 +44,7 @@ session_start();
         <li><a href="about.php" class="active"><i></i> about</a></li>
         <li><a class="active" href="cart.php"><i class="fa-solid fa-bag-shopping"></i> Cart</a></li>
 
-        <?php if (isset($_SESSION['email'])): ?>
+        <?php if (isset($_SESSION['user_id'])): ?>
             <!-- Profile Icon -->
             <li class="dropdown">
                 <a href="#" class="profile-icon">

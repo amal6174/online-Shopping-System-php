@@ -1,6 +1,6 @@
 <?php
-include 'include/nav.php'; 
 
+include 'include/nav.php';  
 ?>
 
 
@@ -135,7 +135,6 @@ include 'include/nav.php';
       
          <div class="pro">
      
-        <form action="" method="POST"> 
 
          <a href="product_details.php?id=<?php echo $fetch_product['p_id']; ?>">
                 <img src="admin/uploaded_img/<?php echo $fetch_product['p_image']; ?>" alt="">
@@ -160,25 +159,24 @@ include 'include/nav.php';
     <div class="product-buttons">
 
  <!-- Hidden data attributes for JavaScript -->
-        <button type="button" class="btn-cart addToCartBtn"
-            data-id="<?php echo $fetch_product['p_id']; ?>"
-            data-name="<?php echo $fetch_product['p_name']; ?>"
-            data-image="<?php echo $fetch_product['p_image']; ?>"
-            data-price="<?php echo $fetch_product['p_price']; ?>">
-           
-            <i class="fa-solid fa-cart-shopping"></i> Add to Cart
-        </button>
+       <button class="btn-cart addToCartBtn"
+        data-id="<?php echo $fetch_product['p_id']; ?>"
+        data-name="<?php echo $fetch_product['p_name']; ?>"
+        data-image="<?php echo $fetch_product['p_image']; ?>"
+        data-price="<?php echo $fetch_product['p_price']; ?>">
+        <i class="fa-solid fa-cart-shopping"></i> Add to Cart
+    </button>
 
 
     
-      <a href="checkout.php?product_id=<?php echo $fetch_product['p_id']; ?>" class="btn-buy">
+      <a href="direct_checkout.php?p_id=<?php echo $fetch_product['p_id']; ?>" class="btn-buy">
         <i class="fa-solid fa-bolt"></i> Buy Now
       </a>
     </div>
    
             
          </div>
-      </form>
+    
                 <?php
                          };
                    }; 
@@ -229,7 +227,7 @@ include 'include/nav.php';
       
          <div class="pro">
      
-         <form action="" method="POST">
+  
          <a href="product_details.php?id=<?php echo $fetch_product['p_id']; ?>">
                 <img src="admin/uploaded_img/<?php echo $fetch_product['p_image']; ?>" alt="">
             </a>
@@ -246,18 +244,32 @@ include 'include/nav.php';
                   <h4>Rs-<?php echo $fetch_product['p_price']; ?></h4>
             </div>
 
-                 
-             <div class="cart">
-              
-              </div>
-                <input type="hidden" name="product_image" value="<?php echo $fetch_product['p_image'];?>">
-                <input type="hidden" name="product_name" value="<?php echo $fetch_product['p_name']; ?>">
-                <input type="hidden" name="product_price" value="<?php echo $fetch_product['p_price']; ?>">
-                <input type="submit" class="btn" value="add to cart" name="add_to_cart">  
+             <!-- Buttons -->
+    <div class="product-buttons">
+
+ <!-- Hidden data attributes for JavaScript -->
+       <button class="btn-cart addToCartBtn"
+        data-id="<?php echo $fetch_product['p_id']; ?>"
+        data-name="<?php echo $fetch_product['p_name']; ?>"
+        data-image="<?php echo $fetch_product['p_image']; ?>"
+        data-price="<?php echo $fetch_product['p_price']; ?>">
+        <i class="fa-solid fa-cart-shopping"></i> Add to Cart
+    </button>
+
+
+    
+      <a href="direct_checkout.php?p_id=<?php echo $fetch_product['p_id']; ?>" class="btn-buy">
+        <i class="fa-solid fa-bolt"></i> Buy Now
+      </a>
+    </div>
+   
+                
+ <!-- Hidden data attributes for JavaScript -->
+ 
 
             
          </div>
-         </form>
+        
                 <?php
       };
       }; 
@@ -340,81 +352,9 @@ include 'include/nav.php';
         <button class="normal" >Sign Up</button>
     </div>
 </section>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-$(document).ready(function() {
-    $('.addToCartBtn').click(function() {
-        let button = $(this);
-        let product_id = button.data('id');
-        let product_name = button.data('name');
-        let product_image = button.data('image');
-        let product_price = button.data('price');
-        let quantity = button.closest('.des').find('.quantity').val();
-        let u_id = <?php echo isset($_SESSION['uid']) ? $_SESSION['uid'] : 0; ?>;
-
-        if (u_id == 0) {
-            alert("Please log in to add items to your cart.");
-            return;
-        }
-
-        $.ajax({
-            url: 'add_to_cart.php',
-            type: 'POST',
-            data: {
-                u_id: u_id,
-                p_id: product_id,
-                product_name: product_name,
-                product_image: product_image,
-                product_price: product_price,
-                product_quantity: quantity
-            },
-            success: function(response) {
-                alert(response);
-            },
-            error: function() {
-                alert("Something went wrong. Please try again.");
-            }
-        });
-    });
-});
-</script>
-
-
-
-
-  <script src="script.js"></script>
-
-
-
-
-
-
-    <!-- slider js
-<script src="assets/js/plugins/jquery.min.js"></script>
-<script src="assets/js/plugins/swiper.min.js"></script>
-<script src="assets/js/theme.js"></script>   -->
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
-<!-- Include JS -->
-<script src="assets/js/cart.js"></script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<script src="js/add_to_cart.js"></script>
 
 
 

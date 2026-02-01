@@ -2,11 +2,10 @@
 require('top.inc.php');
 
 
-$limit = 5; // Records per page
+$limit = 5; 
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
 $start_from = ($page - 1) * $limit;
 
-// Fetch records with limit
 $sql = "SELECT * FROM products LIMIT $start_from, $limit";
 $result = mysqli_query($con, $sql);
 ?>

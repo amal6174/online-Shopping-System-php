@@ -3,56 +3,26 @@
 include('connection.inc.php'); // Ensure this is correct\
 
 
-
-session_start();
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
-require 'PHPMailer/src/Exception.php';
-require 'PHPMailer/src/PHPMailer.php';
-require 'PHPMailer/src/SMTP.php';
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if(isset($_POST['register'])){
+    $name  = $_POST['name'];
     $email = $_POST['email'];
-    $otp = rand(100000, 999999);
+    $pass  = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-    // Database connection
-    
-    $check = mysqli_query($con, "SELECT * FROM users WHERE email='$email'");
-    if (mysqli_num_rows($check) > 0) {
-        mysqli_query($con, "UPDATE users SET otp='$otp', is_verified=0 WHERE email='$email'");
+    $sql = $con->prepare("INSERT INTO users (u_name, email, password) VALUES (?, ?, ?)");
+    $sql->bind_param("sss", $name, $email, $pass);
+
+    if($sql->execute()){
+      echo "<script> alert('register successfull')</script>";
+      
+        // echo "Registration Successful";
+   
     } else {
-        mysqli_query($con, "INSERT INTO users (email, otp) VALUES ('$email', '$otp')");
-    }
-
-    // Send OTP via PHPMailer
-    $mail = new PHPMailer(true);
-    try {
-        $mail->isSMTP();
-        $mail->Host       = 'smtp.gmail.com';
-        $mail->SMTPAuth   = true;
-        $mail->Username   = 'barmanamal140@gmail.com';   // 🔹 Replace with your Gmail
-        $mail->Password   = 'yksbxbgfgatbxwbp';     // 🔹 App password from Step 2
-        $mail->SMTPSecure = 'tls';
-        $mail->Port       = 587;
-
-        $mail->setFrom('barmanamal140@gmail.com', 'FashionM Mitra');
-        $mail->addAddress($email);
-
-        $mail->isHTML(true);
-        $mail->Subject = 'Your OTP for Signup';
-        $mail->Body    = "Your OTP is <b>$otp</b>";
-
-        $mail->send();
-
-        $_SESSION['email'] = $email;
-        header("Location:verify_signup_otp.php");
-        exit();
-
-    } catch (Exception $e) {
-        echo "Mailer Error: " . $mail->ErrorInfo;
+        echo "Email already exists";
     }
 }
+
+
+
 ?>
 
 
@@ -87,16 +57,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           <div class="field input-field">
             <input type="email" placeholder="Email" name="email" class="input">
           </div>
-          <div class="field input-field">
-            <input type="phone" placeholder="phone" name="phone" class="input">
-          </div>
+         
           <div class="field input-field">
             <input type="password" placeholder="Password" name="password" class="password">
             <i class='bx bx-hide eye-icon'></i>
           </div>
          
           <div class="field button-field">
-            <button type="submit" >sing Up</button>
+            <button type="submit" name="register" >sing Up</button>
           </div>
         </form>
         <div class="form-link">
